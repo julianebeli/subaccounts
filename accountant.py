@@ -9,21 +9,21 @@ class Accountant:
         return list(map(lambda x: dict(zip(self.headers, x)), data))
 
     def siblings(self, **data):
-        # siblings have the same parent as data['id']
+        # siblings are self.subaccounts find where parent_account_id = data['parent_account_id']
         if not self.is_full_record(data):
             data = self.details(**data)[0]
         siblings = list(filter(lambda x: x['parent_account_id'] == data['parent_account_id'], self.subaccounts))
         return siblings
 
     def parent(self, **data):
-        # parent is self.subaccounts find data['parent_account_id']
+        # parent is self.subaccounts find where id = data['parent_account_id']
         if not self.is_full_record(data):
             data = self.details(**data)[0]
         parent = list(filter(lambda x: x['id'] == data['parent_account_id'], self.subaccounts))
         return parent
 
     def children(self, **data):
-        # children id self.subaccounts find where parent_id = data['id']
+        # children are self.subaccounts find where parent_id = data['id']
         if not self.is_full_record(data):
             data = self.details(**data)[0]
         children = list(filter(lambda x: x['parent_account_id'] == data['id'], self.subaccounts))
