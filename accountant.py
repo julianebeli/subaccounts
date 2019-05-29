@@ -1,7 +1,10 @@
+from pathlib import Path
+
+
 class Accountant:
 
     def __init__(self):
-        with open('subaccount_data.csv', 'r') as f:
+        with open(Path(__file__).parent / 'subaccount_data.csv', 'r') as f:
             self.subaccounts = self.organise([x.strip().split(",") for x in f.readlines()])
 
     def organise(self, data):
@@ -12,7 +15,8 @@ class Accountant:
         # siblings are self.subaccounts find where parent_account_id = data['parent_account_id']
         if not self.is_full_record(data):
             data = self.details(**data)[0]
-        siblings = list(filter(lambda x: x['parent_account_id'] == data['parent_account_id'], self.subaccounts))
+        siblings = list(filter(lambda x: (x['parent_account_id'] == data['parent_account_id'])
+                               and not (x['id'] == data['id']), self.subaccounts))
         return siblings
 
     def parent(self, **data):
@@ -59,4 +63,3 @@ if __name__ == '__main__':
     print(parent)
     siblings = A.siblings(**dict(name='Kings Meadows High School'))
     # print(siblings)
-
